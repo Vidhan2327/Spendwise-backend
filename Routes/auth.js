@@ -1,13 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { register, login,logout } = require('../Controllers/AuthController');
+const { register, login, logout } = require("../Controllers/AuthController");
+const auth = require("../Middleware/Auth"); // <-- import middleware
 
-// Define the route for user registration
-// When a POST request is made to '/api/auth/register', the 'register' controller function will be executed.
-router.post('/register', register);
+// Public routes
+router.post("/register", register);
+router.post("/login", login);
+router.post("/logout", logout);
 
-// Define the route for user login
-// When a POST request is made to '/api/auth/login', the 'login' controller function will be executed.
-router.post('/login', login);
-router.post("/logout", logout); 
+// Protected route 
+router.get("/me", auth, (req, res) => {
+  res.status(200).json({ success: true, user: req.user });
+});
+
+
 module.exports = router;

@@ -1,31 +1,30 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const cookieParser = require('cookie-parser'); // <- required for cookies
-require('dotenv').config(); // Load environment variables from .env file
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-
-// Enable CORS for frontend with credentials
-app.use(cors({
-  origin: "http://localhost:5173", // frontend URL
-  credentials: true,              // allow sending cookies
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
-app.use(cookieParser()); // Parse cookies from requests
+app.use(cookieParser());
 
-// --- Connect to MongoDB ---
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Successfully connected to MongoDB Atlas!'))
-  .catch((error) => console.error('Error connecting to MongoDB Atlas:', error));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected to MongoDB!"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-// --- API Routes ---
-app.use('/api/auth', require('./Routes/auth')); // Auth routes
+app.use("/api/auth", require("./Routes/auth"));
+app.use("/api/app", require("./Routes/Approutes"));
 
-// --- Start server ---
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`)
+);
